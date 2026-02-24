@@ -1,7 +1,6 @@
-
 require("config.options")
 require("config.keymaps")
+require("config.lazy")
 
-if vim.g.vscode == nil then
-    require("config.lazy")
-end
+-- if vim.g.vscode == nil then
+-- end
