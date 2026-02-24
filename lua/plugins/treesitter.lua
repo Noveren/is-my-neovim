@@ -1,9 +1,12 @@
 return {
     "nvim-treesitter/nvim-treesitter",
-    main = "nvim-treesitter.configs",
-    event = "VeryLazy",
-    opts = {
-        ensure_installed = { "lua" },
-        highlight = { enable = true }
-    },
+    lazy = false,
+    build = ":TSUpdate",
+    -- config = function()
+    -- end
+    -- event = "VeryLazy",
+    -- opts = {
+    --     ensure_installed = { "lua" },
+    --     highlight = { enable = true }
+    -- },
 }
