@@ -7,6 +7,7 @@
 ---@field opt Option
 ---@field g G
 ---@field api API
+---@field fn Fn
 vim = {}
 
 ---@class G
@@ -49,3 +50,12 @@ function API.nvim_set_keymap(mode, lhs, rhs, opts) end
 -- ---@enum keys
 -- local KEYS = {
 -- }
+
+---@class Fn
+local Fn = {}
+
+---@return string
+---|"'/'"
+---|"'?'"
+---|"':'"
+function Fn.getcmdtype() end

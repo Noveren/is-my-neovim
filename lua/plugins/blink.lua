@@ -1,21 +1,31 @@
 return {
     "saghen/blink.cmp",
-    version = "*",
-    dependencies = {
-        "rafamadriz/friendly-snippets",
-    },
+    -- optional: provides snippets for the snippet source
+    -- dependencies = {
+    --     "rafamadriz/friendly-snippets",
+    -- },
+    version = "1.*",
     event = "VeryLazy",
+
+    -- https://cmp.saghen.dev/
     opts = {
+        appearance = {
+            -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+            -- Adjusts spacing to ensure icons are aligned
+            nerd_font_variant = "mono",
+        },
         completion = {
             documentation = {
                 auto_show = true,
             },
         },
+        fuzzy = { implementation = "prefer_rust_with_warning" },
+        sources = {
+            -- lsp, path, snippets, buffer
+            default = { 'lsp', 'path', 'buffer' },
+        },
         keymap = {
             preset = "super-tab",
-        },
-        sources = {
-            default = { "path", "snippets", "buffer", "lsp" },
         },
         cmdline = {
             sources = function()
@@ -39,4 +49,3 @@ return {
         },
     }
 }
-
