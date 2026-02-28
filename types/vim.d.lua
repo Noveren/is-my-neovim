@@ -11,10 +11,20 @@
 ---@field fn Fn
 ---@field lsp LSP
 ---@field fs FileSystem
+---@field uv UV Exposes the "luv" lua bindings for the libuv library that nvim uses for networking, filesystem and process managment.
+---@field loop Loop Use `vim.uv` instead.
+---@field v V
 vim = {}
 
 ---@param fn fun() 由 main-event-loop 延后调用
 function vim.schedule(fn) end
+
+---@param msg string
+---@param level? integer
+---@param opts? NotifyOptions
+function vim.notify(msg, level, opts) end
+
+---@class NotifyOptions
 
 ---A special interface exists for conveniently interacting with list- and
 ---map-style options from Lua: It allows accessing them as Lua tables and
@@ -39,15 +49,19 @@ function vim.schedule(fn) end
 ---@field tabstop integer (default 8) `<Tab>` 渲染时对应的 `<Space>` 数量
 ---@field softtabstop integer (default 0)
 ---@field shiftwidth integer (defualt 8) 缩进对应的 `<Space>` 数量
--- ---@field runtimepath RuntimePath
+---@field runtimepath RuntimePath
 -- local Option = {}
 
--- ---@class RuntimePath
--- local RuntimePath = {}
+---@class RuntimePath
+local RuntimePath = {}
+
+---@param path string
+function RuntimePath:prepend(path) end
 
 ---@class G
 ---@field mapleader string `<Leader>`；修改后，不影响已定义的按键
 ---@field maplocalleader string `<LocalLeader>`；修改后，不影响已定义的按键
+---@field [string] any
 local G = {}
 
 ---@class Keymap
@@ -94,6 +108,8 @@ local API = {}
 ---@param opts? KeymapOptions Values are booleans (default false)
 function API.nvim_set_keymap(mode, lhs, rhs, opts) end
 
+-- function API.nvim_echo
+
 ---@class KeymapOptions vim.api.keyset.keymap
 ---@field noremap? boolean disable recursive mapping
 ---@field silent? boolean disable being echoed on the command line.
@@ -139,6 +155,15 @@ local Fn = {}
 ---|"':'"
 function Fn.getcmdtype() end
 
+-- FIXME
+---@param cmd string[]
+---@return string
+function Fn.system(cmd) end
+
+---@param expr? integer
+---@param opts? any
+function Fn.getchar(expr, opts) end
+
 ---
 ---@param p string
 ---|"'config'" Returns the user configuration directory.
@@ -183,3 +208,18 @@ local FileSystem = {}
 ---@param source integer|string 缓冲区 ID
 ---@param marker string|string[]|fun(name: string, path: string): boolean[]
 function FileSystem.root(source, marker) end
+
+---@class UV
+local UV = {}
+
+---@param path string
+---@return FileStat|nil
+function UV.fs_stat(path) end
+
+---@class FileStat
+---@field dev integer
+
+---@class Loop
+
+---@class V
+---@field shell_error integer Result of the last shell command. When non-zero, the last shell command had an error.

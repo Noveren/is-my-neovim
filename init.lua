@@ -34,13 +34,245 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "move focus to the top." })
 --使用 `<CR>` 插入空白行
 vim.api.nvim_set_keymap("n", "<CR>", "i<CR><Esc>", { noremap = true, silent = true })
 
--- TODO nvim-tree
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
 
---TODO Lazy
 --TODO vim.lsp
-require("config.lazy")
 
 -- if vim.g.vscode == nil then
 -- end
+
+local plugin_enabled = true
+
+---@type LazySpec
+local plugin_onedark = {
+    "navarasu/onedark.nvim",
+    enabled = plugin_enabled and true,
+    -- https://github.com/navarasu/onedark.nvim
+    opts = {},
+    init = function() require("onedark").load() end
+}
+
+---@type LazySpec
+local plugin_nvim_autopairs = {
+    "windwp/nvim-autopairs",
+    -- https://github.com/windwp/nvim-autopairs
+    enabled = plugin_enabled and true,
+    event = "InsertEnter",
+    opts = {},
+}
+
+---@type LazySpec
+local plugin_ident_blankline = {
+    "lukas-reineke/indent-blankline.nvim",
+    -- https://github.com/lukas-reineke/indent-blankline.nvim
+    enabled = plugin_enabled and true,
+    event = "VeryLazy",
+    main = "ibl",
+    opts = {},
+}
+
+---@type LazySpec
+local plugin_treesitter = {
+    "nvim-treesitter/nvim-treesitter",
+    -- https://github.com/nvim-treesitter/nvim-treesitter
+    enabled = plugin_enabled and true,
+    lazy = false,
+    build = ":TSUpdate",
+}
+
+local plugin_nvim_tree = {
+    "nvim-tree/nvim-tree.lua",
+    -- https://github.com/nvim-tree/nvim-tree.lua
+    enabled = plugin_enabled and true,
+    lazy = false,
+    dependencies = {
+        "nvim-tree/nvim-web-devicons",
+    },
+    init = function()
+        vim.g.loaded_netrw = 1
+        vim.g.loaded_netrwPlugin = 1
+    end,
+    opts = {
+        sort = {
+            sorter = "case_sensitive",
+        },
+        view = {
+            width = 30,
+        },
+        renderer = {
+            group_empty = true,
+        },
+        filters = {
+            dotfiles = true,
+        },
+    },
+}
+
+---@type LazySpec
+local plugin_lualine = {
+    'nvim-lualine/lualine.nvim',
+    -- https://github.com/nvim-lualine/lualine.nvim
+    enabled = plugin_enabled and true,
+    lazy = false,
+    dependencies = { "nvim-tree/nvim-web-devicons", },
+    opts = {
+        options = {
+            icons_enabled = true,
+            theme = "onedark",
+            component_separators = { left = '', right = '' },
+            section_separators = { left = '', right = '' },
+            disabled_filetypes = {
+                statusline = {},
+                winbar = {},
+            },
+            ignore_focus = {},
+            always_divide_middle = true,
+            always_show_tabline = true,
+            globalstatus = false,
+            refresh = {
+                statusline = 100,
+                tabline = 100,
+                winbar = 100,
+            }
+        },
+        sections = {
+            lualine_a = { 'mode' },
+            lualine_b = { 'branch', 'diff', 'diagnostics' },
+            lualine_c = { 'filename' },
+            lualine_x = { 'encoding', 'fileformat', 'filetype' },
+            lualine_y = { 'progress' },
+            lualine_z = { 'location' }
+        },
+        inactive_sections = {
+            lualine_a = {},
+            lualine_b = {},
+            lualine_c = { 'filename' },
+            lualine_x = { 'location' },
+            lualine_y = {},
+            lualine_z = {}
+        },
+        tabline = {},
+        winbar = {},
+        inactive_winbar = {},
+        extensions = {}
+    },
+}
+
+---@type LazySpec
+local plugin_bufferline = {
+    "akinsho/bufferline.nvim",
+    -- https://github.com/akinsho/bufferline.nvim
+    enabled = plugin_enabled and true,
+    version = "*",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+        options = {
+            diagnostics = "nvim_lsp",
+            offsets = { {
+                filetype = "NvimTree",
+                text = "File Explorer",
+                highlight = "Directory",
+                text_align = "left"
+            } },
+            separator_style = "slant",
+            numbers = function(opts)
+                return string.format('%s', opts.raise(opts.id))
+            end,
+        }
+    },
+}
+
+---@type LazySpec
+local plugin_blink = {
+    "saghen/blink.cmp",
+    -- https://github.com/Saghen/blink.cmp
+    enabled = plugin_enabled and true,
+    -- optional: provides snippets for the snippet source
+    -- dependencies = {
+    --     "rafamadriz/friendly-snippets",
+    -- },
+    version = "1.*",
+    event = "VeryLazy",
+
+    -- https://cmp.saghen.dev/
+    opts = {
+        appearance = {
+            -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+            -- Adjusts spacing to ensure icons are aligned
+            nerd_font_variant = "mono",
+        },
+        completion = {
+            documentation = {
+                auto_show = true,
+            },
+        },
+        fuzzy = { implementation = "prefer_rust_with_warning" },
+        sources = {
+            -- lsp, path, snippets, buffer
+            default = { 'lsp', 'path', 'buffer' },
+        },
+        keymap = {
+            preset = "super-tab",
+        },
+        cmdline = {
+            sources = function()
+                local cmd_type = vim.fn.getcmdtype()
+                if cmd_type == "/" or cmd_type == "?" then
+                    return { "buffer" }
+                end
+                if cmd_type == ":" then
+                    return { "cmdline" }
+                end
+                return {}
+            end,
+            keymap = {
+                preset = "super-tab",
+            },
+            completion = {
+                menu = {
+                    auto_show = true,
+                },
+            },
+        },
+    }
+}
+---@type LazyConfig
+local lazy_config = {
+    spec = {
+        plugin_onedark,
+        plugin_nvim_autopairs,
+        plugin_ident_blankline,
+        plugin_treesitter,
+        plugin_blink,
+        plugin_nvim_tree,
+        plugin_lualine,
+        plugin_bufferline,
+    },
+    install = {
+        missing = false,
+    },
+}
+local function lazy_install()
+    local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+    if not vim.uv.fs_stat(lazypath) then
+        local url = "https://github.com/folke/lazy.nvim.git"
+        local out = vim.fn.system({
+            "git", "clone", "--filter=blob:none", "--branch=stable",
+            url, lazypath,
+        })
+        if vim.v.shell_error ~= 0 then
+            error("Failed to clone lazy.nvim:\n" .. out)
+            vim.fn.getchar()
+            os.exit(1)
+        end
+    end
+    vim.opt.runtimepath:prepend(lazypath)
+    vim.g.mapleader = " "
+    vim.g.maplocalleader = "\\"
+end
+lazy_install()
+-- require("lazy").setup({{ import = "plugins" }})
+-- require("lazy").setup("plugins")
+--  `$XDG_CONFIG_HOME/nvim/lua/plugins.lua`
+--  `$XDG_CONFIG_HOME/nvim/lua/plugins/init.lua`
+--  `$XDG_CONFIG_HOME/nvim/lua/plugins/*.lua`
+require("lazy").setup(lazy_config)
