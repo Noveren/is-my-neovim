@@ -35,10 +35,18 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "move focus to the top." })
 vim.api.nvim_set_keymap("n", "<CR>", "i<CR><Esc>", { noremap = true, silent = true })
 
 
---TODO vim.lsp
-
--- if vim.g.vscode == nil then
--- end
+vim.lsp.enable("lua_ls")
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
+    callback = function(event)
+        -- local client = vim.lsp.get_client_by_id(event.data.client_id)
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition,  { buffer = event.buf, desc = "LSP: Goto definition" })
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = event.buf, desc = "LSP: Goto declaration" })
+        vim.diagnostic.config({
+            virtual_text = true,
+        })
+    end
+})
 
 local plugin_enabled = true
 
@@ -216,7 +224,7 @@ local plugin_bufferline = {
     },
 }
 
----@type LazySpec
+-- -@type LazySpec
 local plugin_blink = {
     "saghen/blink.cmp",
     -- https://github.com/Saghen/blink.cmp
@@ -229,6 +237,8 @@ local plugin_blink = {
     event = "VeryLazy",
 
     -- https://cmp.saghen.dev/
+    ---@module "blink.cmp"
+    ---@type blink.cmp.Config
     opts = {
         appearance = {
             -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
