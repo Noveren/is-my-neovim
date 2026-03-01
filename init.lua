@@ -215,7 +215,7 @@ local plugin_blink = {
     --     "rafamadriz/friendly-snippets",
     -- },
     version = "1.*",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
 
     -- https://cmp.saghen.dev/
     ---@module "blink.cmp"
@@ -227,17 +227,20 @@ local plugin_blink = {
             nerd_font_variant = "mono",
         },
         completion = {
+            menu = {
+                auto_show = true,
+            },
             documentation = {
                 auto_show = true,
             },
+            -- ghost_text = {
+            --     enabled = true,
+            --     show_with_menu = true,
+            -- },
         },
         fuzzy = {
             implementation = "lua",
             -- implementation = "rust",
-            -- proxy = {
-            --     from_env = false,
-            --     url = github_mirror,
-            -- },
         },
         sources = {
             -- lsp, path, snippets, buffer

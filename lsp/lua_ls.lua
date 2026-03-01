@@ -1,14 +1,15 @@
 
 local library = {
     vim.fn.expand("$VIMRUNTIME/lua"),
-    "${3rd}/luv/library",
+    vim.fn.expand("${3rd}/luv/library"),
 }
 
 local runtimepath = vim.split(vim.api.nvim_get_option_value("runtimepath", {}), ",")
-local lazypath = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy")
+local lazypath = vim.fn.expand(vim.fn.stdpath("data") .. "/lazy")
 for _, path in ipairs(runtimepath) do
-    if vim.fs.relpath(lazypath, path) ~= nil then
-        table.insert(library, path)
+    local _path = vim.fn.expand(path)
+    if vim.fs.relpath(lazypath, _path) ~= nil then
+        table.insert(library, _path)
     end
 end
 
