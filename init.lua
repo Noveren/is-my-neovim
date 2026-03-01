@@ -125,15 +125,7 @@ local plugin_snacks = {
     },
     keys = {
         { "<C-e>", function() Snacks.explorer.open() end, desc = "Toggle Explorer" },
-        {
-            "<C-p>",
-            function()
-                Snacks.picker.smart({
-                    multi = { "files", "buffers" }, format = "file",
-                })
-            end,
-            desc = "Smart Files"
-        },
+        { "<C-p>", function() Snacks.picker() end, desc = "Picker" },
         -- { "<C-t", function() Snacks.terminal.toggle() end, desc = "Toggle Terminal" },
         -- { "<C-S-p>", function() Snacks.picker.commands() end, desc = "Commands" },
     }
