@@ -1,9 +1,9 @@
 
+-- TODO 仅在 nvim 配置目录下加入
 local library = {
     vim.fn.expand("$VIMRUNTIME/lua"),
     vim.fn.expand("${3rd}/luv/library"),
 }
-
 local runtimepath = vim.split(vim.api.nvim_get_option_value("runtimepath", {}), ",")
 local lazypath = vim.fn.expand(vim.fn.stdpath("data") .. "/lazy")
 for _, path in ipairs(runtimepath) do
