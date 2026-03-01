@@ -1,3 +1,6 @@
+local github_mirror = "https://gh-proxy.org/"
+local plugin_enabled = true
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
@@ -37,6 +40,7 @@ vim.api.nvim_set_keymap("n", "<CR>", "i<CR><Esc>", { noremap = true, silent = tr
 
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("clangd")
+vim.lsp.enable("zls")
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
     callback = function(event)
@@ -49,7 +53,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 })
 
-local plugin_enabled = true
 
 ---@type LazySpec
 local plugin_onedark = {
@@ -236,7 +239,14 @@ local plugin_blink = {
                 auto_show = true,
             },
         },
-        fuzzy = { implementation = "prefer_rust_with_warning" },
+        fuzzy = {
+            implementation = "lua",
+            -- implementation = "rust",
+            -- proxy = {
+            --     from_env = false,
+            --     url = github_mirror,
+            -- },
+        },
         sources = {
             -- lsp, path, snippets, buffer
             default = { 'lsp', 'path', 'buffer' },
@@ -266,7 +276,6 @@ local plugin_blink = {
         },
     }
 }
-local github_mirror = "https://gh-proxy.org/"
 ---@type LazyConfig
 local lazy_config = {
     spec = {
