@@ -36,6 +36,7 @@ vim.api.nvim_set_keymap("n", "<CR>", "i<CR><Esc>", { noremap = true, silent = tr
 
 
 vim.lsp.enable("lua_ls")
+vim.lsp.enable("clangd")
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
     callback = function(event)
@@ -93,18 +94,31 @@ local plugin_snacks = {
     -- https://github.com/folke/snacks.nvim
     priority = 1000,
     lazy = false,
+
+    ---@type snacks.Config
     opts = {
-        -- https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
-        picker = {},
-        -- https://github.com/folke/snacks.nvim/blob/main/docs/explorer.md
-        -- https://github.com/folke/snacks.nvim/blob/main/docs/picker.md#explorer
-        explorer = {
-            replace_netrw = true,
-            trash = true,
+        ---@type snacks.picker.Config
+        picker = {
         },
-        -- https://github.com/folke/snacks.nvim/blob/main/docs/statuscolumn.md
-        -- statuscolumn = {
-        -- },
+        ---@type snacks.picker.explorer.Config
+        explorer = {
+            enabled = true,
+            exclude = {},
+        },
+        ---@type snacks.statuscolumn.Config
+        statuscolumn = {
+            enabled = true,
+            left = { "mark", "git", "fold" },
+            right = { "sign" },
+            folds = {
+                open = true,
+                git_hl = true,
+            }
+        },
+        ---@type snacks.terminal.Config
+        terminal = {
+            enabled = true,
+        },
     },
     keys = {
         { "<C-e>", function() Snacks.explorer.open() end, desc = "Toggle Explorer" },
@@ -112,43 +126,15 @@ local plugin_snacks = {
             "<C-p>",
             function()
                 Snacks.picker.smart({
-                    multi = { "files" }, format = "file",
+                    multi = { "files", "buffers" }, format = "file",
                 })
             end,
             desc = "Smart Files"
         },
+        -- { "<C-t", function() Snacks.terminal.toggle() end, desc = "Toggle Terminal" },
         -- { "<C-S-p>", function() Snacks.picker.commands() end, desc = "Commands" },
     }
 }
-
--- ---@type LazySpec
--- local plugin_nvim_tree = {
---     "nvim-tree/nvim-tree.lua",
---     -- https://github.com/nvim-tree/nvim-tree.lua
---     enabled = plugin_enabled and true,
---     lazy = false,
---     dependencies = {
---         "nvim-tree/nvim-web-devicons",
---     },
---     init = function()
---         vim.g.loaded_netrw = 1
---         vim.g.loaded_netrwPlugin = 1
---     end,
---     opts = {
---         sort = {
---             sorter = "case_sensitive",
---         },
---         view = {
---             width = 30,
---         },
---         renderer = {
---             group_empty = true,
---         },
---         filters = {
---             dotfiles = true,
---         },
---     },
--- }
 
 ---@type LazySpec
 local plugin_lualine = {
