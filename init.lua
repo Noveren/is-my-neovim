@@ -100,9 +100,15 @@ local plugin_snacks = {
     },
     keys = {
         { "<C-e>", function() Snacks.explorer.open() end, desc = "Toggle Explorer" },
-        { "<C-p>", function() Snacks.picker.smart({
-            multi = { "files" }, format = "file",
-        }) end, desc = "Smart Files" },
+        {
+            "<C-p>",
+            function()
+                Snacks.picker.smart({
+                    multi = { "files" }, format = "file",
+                })
+            end,
+            desc = "Smart Files"
+        },
         -- { "<C-S-p>", function() Snacks.picker.commands() end, desc = "Commands" },
     }
 }
@@ -264,6 +270,7 @@ local plugin_blink = {
         },
     }
 }
+local github_mirror = "https://gh-proxy.org/"
 ---@type LazyConfig
 local lazy_config = {
     spec = {
@@ -272,7 +279,6 @@ local lazy_config = {
         plugin_ident_blankline,
         plugin_treesitter,
         plugin_blink,
-        -- plugin_nvim_tree,
         plugin_lualine,
         plugin_bufferline,
         plugin_snacks,
@@ -280,11 +286,15 @@ local lazy_config = {
     install = {
         missing = false,
     },
+    git = {
+        url_format = github_mirror .. "https://github.com/%s.git",
+
+    },
 }
 local function lazy_install()
     local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
     if not vim.uv.fs_stat(lazypath) then
-        local url = "https://github.com/folke/lazy.nvim.git"
+        local url = github_mirror .. "https://github.com/folke/lazy.nvim.git"
         local out = vim.fn.system({
             "git", "clone", "--filter=blob:none", "--branch=stable",
             url, lazypath,
