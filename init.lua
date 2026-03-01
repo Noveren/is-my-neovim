@@ -79,33 +79,62 @@ local plugin_treesitter = {
     build = ":TSUpdate",
 }
 
-local plugin_nvim_tree = {
-    "nvim-tree/nvim-tree.lua",
-    -- https://github.com/nvim-tree/nvim-tree.lua
-    enabled = plugin_enabled and true,
+---@type LazySpec
+local plugin_snacks = {
+    "folke/snacks.nvim",
+    -- https://github.com/folke/snacks.nvim
+    priority = 1000,
     lazy = false,
-    dependencies = {
-        "nvim-tree/nvim-web-devicons",
-    },
-    init = function()
-        vim.g.loaded_netrw = 1
-        vim.g.loaded_netrwPlugin = 1
-    end,
     opts = {
-        sort = {
-            sorter = "case_sensitive",
+        -- https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
+        picker = {},
+        -- https://github.com/folke/snacks.nvim/blob/main/docs/explorer.md
+        -- https://github.com/folke/snacks.nvim/blob/main/docs/picker.md#explorer
+        explorer = {
+            replace_netrw = true,
+            trash = true,
         },
-        view = {
-            width = 30,
-        },
-        renderer = {
-            group_empty = true,
-        },
-        filters = {
-            dotfiles = true,
-        },
+        -- https://github.com/folke/snacks.nvim/blob/main/docs/statuscolumn.md
+        -- statuscolumn = {
+        -- },
     },
+    keys = {
+        { "<C-e>", function() Snacks.explorer.open() end, desc = "Toggle Explorer" },
+        { "<C-p>", function() Snacks.picker.smart({
+            multi = { "files" }, format = "file",
+        }) end, desc = "Smart Files" },
+        -- { "<C-S-p>", function() Snacks.picker.commands() end, desc = "Commands" },
+    }
 }
+
+-- ---@type LazySpec
+-- local plugin_nvim_tree = {
+--     "nvim-tree/nvim-tree.lua",
+--     -- https://github.com/nvim-tree/nvim-tree.lua
+--     enabled = plugin_enabled and true,
+--     lazy = false,
+--     dependencies = {
+--         "nvim-tree/nvim-web-devicons",
+--     },
+--     init = function()
+--         vim.g.loaded_netrw = 1
+--         vim.g.loaded_netrwPlugin = 1
+--     end,
+--     opts = {
+--         sort = {
+--             sorter = "case_sensitive",
+--         },
+--         view = {
+--             width = 30,
+--         },
+--         renderer = {
+--             group_empty = true,
+--         },
+--         filters = {
+--             dotfiles = true,
+--         },
+--     },
+-- }
 
 ---@type LazySpec
 local plugin_lualine = {
@@ -243,9 +272,10 @@ local lazy_config = {
         plugin_ident_blankline,
         plugin_treesitter,
         plugin_blink,
-        plugin_nvim_tree,
+        -- plugin_nvim_tree,
         plugin_lualine,
         plugin_bufferline,
+        plugin_snacks,
     },
     install = {
         missing = false,
