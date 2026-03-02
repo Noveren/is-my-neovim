@@ -42,3 +42,6 @@ vim.opt.expandtab = true -- Use <space>s instead of <tab>
 -- 分屏位置
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+
+-- 固定符号栏宽度
+vim.opt.signcolumn = "yes:2"
