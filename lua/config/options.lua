@@ -20,7 +20,7 @@ vim.opt.relativenumber = true
 vim.opt.scrolloff = 8
 vim.opt.cursorline = true
 -- 列宽标识
-vim.opt.colorcolumn = "80"
+-- vim.opt.colorcolumn = "80"
 vim.api.nvim_create_autocmd("TermOpen", {
     group = vim.api.nvim_create_augroup("terminal-open", { clear = true }),
     pattern = "*",
@@ -42,4 +42,3 @@ vim.opt.expandtab = true -- Use <space>s instead of <tab>
 -- 分屏位置
 vim.opt.splitright = true
 vim.opt.splitbelow = true
-

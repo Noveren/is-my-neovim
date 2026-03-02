@@ -47,7 +47,27 @@ local lazy_config = {
         -- https://github.com/lukas-reineke/indent-blankline.nvim
         { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
         -- https://github.com/nvim-treesitter/nvim-treesitter
-        { "nvim-treesitter/nvim-treesitter", lazy = false, build = ":TSUpdate" },
+        {
+            "nvim-treesitter/nvim-treesitter",
+            lazy = false,
+            build = ":TSUpdate",
+            opts = {
+                highlight = { enable = true, },
+                ident     = { enable = true, },
+                folding   = { enable = true, },
+            },
+            init = function()
+                -- `zi` 切换折叠使能
+                -- `za` 切换当前折叠
+                -- `zM` 关闭所有折叠
+                -- `zR` 打开所有折叠
+                vim.opt.foldenable = true
+                vim.opt.foldmethod = "expr"
+                vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+                vim.opt.foldlevel = 99
+                vim.opt.foldcolumn = "1"
+            end
+        },
         ---------------------------------------------------------------------------------------
         -- `$XDG_CONFIG_HOME/nvim/lua/plugins.lua`
         -- `$XDG_CONFIG_HOME/nvim/lua/plugins/init.lua`
