@@ -4,6 +4,9 @@ vim.o.timeoutlen = 500
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- 调整 Ctrl-v Visual-block
+vim.keymap.set("n", "<A-v>", "<C-v>", { remap = false })
+
 -- 使用 `ESC` 清除搜索高亮
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
