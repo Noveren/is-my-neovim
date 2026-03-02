@@ -1,4 +1,4 @@
-
+--- `"<cmd>"` == `":", { silent=true }`
 
 vim.o.timeoutlen = 500
 vim.g.mapleader = " "
@@ -18,6 +18,10 @@ vim.keymap.set("n", "<C-Up>",    "<cmd>resize +2<CR>")
 vim.keymap.set("n", "<C-Down>",  "<cmd>resize -3<CR>")
 vim.keymap.set("n", "<C-Left>",  "<cmd>vertical resize -2<CR>")
 vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<CR>")
+
+-- 单行上下移动
+vim.keymap.set("n", "<A-k>", "<cmd>m .-2<CR>", { desc = "Move line Up."   })
+vim.keymap.set("n", "<A-j>", "<cmd>m .+1<CR>", { desc = "Move line down." })
 
 -- 使用 `<CR>` 插入空白行
 vim.keymap.set("n", "<CR>", "i<CR><Esc>")
