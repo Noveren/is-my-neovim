@@ -1,4 +1,18 @@
 
+local function configure_shell()
+    local sysname = vim.uv.os_uname().sysname
+    if sysname == "Windows_NT" then
+        local env_shell = os.getenv("SHELL")
+        -- Windows Git Bash
+        if env_shell and env_shell:find("bash") then
+            vim.opt.shellcmdflag = "-c"
+            vim.opt.shellquote = ""
+            vim.opt.shellxquote = ""
+        end
+    end
+end
+configure_shell()
+
 require("config.options")
 require("config.keymaps")
 require("config.lsp")
