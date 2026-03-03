@@ -10,8 +10,15 @@ vim.lsp.enable "ty"     -- python
 ---@param event vim.api.keyset.create_autocmd.callback_args
 local function lsp_attach(event)
     vim.diagnostic.config({
-        virtual_text = true,
+        virtual_text = {
+            source = false,
+            limit = 20,
+            spacing = 2,
+        },
+        signs = true,
+        underline = true,
     })
+    vim.keymap.set("n", "E", vim.diagnostic.open_float, { desc = "Show diagnostic float" })
 end
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
