@@ -19,6 +19,7 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>")
 -- 窗口大小调整
 vim.keymap.set("n", "<C-Up>",    "<cmd>resize +2<CR>")
 vim.keymap.set("n", "<C-Down>",  "<cmd>resize -3<CR>")
+-- TODO 区分垂直分割线位置
 vim.keymap.set("n", "<C-Left>",  "<cmd>vertical resize -2<CR>")
 vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<CR>")
 
