@@ -2,6 +2,7 @@ vim.lsp.enable "lua_ls"
 vim.lsp.enable "clangd"
 vim.lsp.enable "zls"
 vim.lsp.enable "tombi"
+vim.lsp.enable "ty"
 
 ---@param event vim.api.keyset.create_autocmd.callback_args
 local function lsp_attach(event)
