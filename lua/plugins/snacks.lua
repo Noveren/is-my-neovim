@@ -7,18 +7,12 @@ return {
     opts = {
         bufdelete = {},
         statuscolumn = {
-            -- left = { "mark", "git", "fold" },
-            -- right = { "sign" },
+            left = { "mark", "git", "fold" },
+            right = { "sign" },
             folds = {
                 open = true,
                 git_hl = true,
             }
-        },
-        ---@type snacks.terminal.Config
-        terminal = {
-            win = {
-                style = "terminal",
-            },
         },
         ---@type snacks.picker.Config
         picker = {
@@ -28,7 +22,8 @@ return {
             exclude = {},
         },
     },
-    config = function()
+    config = function(_, opts)
+        Snacks.setup(opts)
         vim.g.loaded_netrw = 1
         vim.g.loaded_netrwPlugin = 1
         vim.api.nvim_create_autocmd("VimEnter", {

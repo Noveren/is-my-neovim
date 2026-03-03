@@ -98,6 +98,12 @@ local lazy_config = {
                 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
                 vim.opt.foldlevel = 99
                 vim.opt.foldcolumn = "1"
+                -- vim.opt.fillchars = {
+                --     fold = " ",
+                --     foldopen = "",
+                --     foldclose = "",
+                --     foldsep = " ",
+                -- }
             end
         },
         ---------------------------------------------------------------------------------------

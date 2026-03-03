@@ -44,4 +44,4 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 -- 固定符号栏宽度
-vim.opt.signcolumn = "yes:2"
+vim.opt.signcolumn = "yes:1"
