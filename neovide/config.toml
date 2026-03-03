@@ -1,0 +1,6 @@
+# Unix    $XDG_CONFIG_HOME/neovide/config.toml
+# Windows {FOLDERID_RoamingAppData}/neovide/config.toml
+# Use `$NEOVIDE_CONFIG` (full path to a `config.toml` file)
+
+[font]
+size = 12
