@@ -58,8 +58,6 @@ local lazy_config = {
         },
         -- https://github.com/windwp/nvim-autopairs
         { "windwp/nvim-autopairs", event = "InsertEnter", opts = {} },
-        -- https://github.com/lukas-reineke/indent-blankline.nvim
-        { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
         -- -- https://github.com/smoka7/multicursors.nvim
         -- {
         --     "smoka7/multicursors.nvim",

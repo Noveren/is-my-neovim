@@ -59,7 +59,11 @@ local lazy_spec = {
     lazy = false,
     ---@type snacks.Config
     opts = {
-        bufdelete = { enabled = true },
+        ---@type snacks.indent.Config
+        indent = {
+            enabled = true,
+        },
+        ---@type snacks.statuscolumn.Config
         statuscolumn = {
             enabled = true,
             left = { "mark", "git", "fold" },
@@ -67,14 +71,16 @@ local lazy_spec = {
             folds = {
                 open = true,
                 git_hl = true,
-            }
+            },
+            git = { patterns = { "GitSign", "MiniDiffSign" } },
+            refresh = 50, -- ms
         },
         ---@type snacks.terminal.Config
-        terminal = { win = { position = "float" }, },
+        terminal = { enabled = true, win = { position = "float" } },
         ---@type snacks.picker.Config
-        picker = { focus = "input", },
+        picker = { enabled = true, focus = "input" },
         ---@type snacks.explorer.Config
-        explorer = { enabled = true, exclude = {}, },
+        explorer = { enabled = true, exclude = {} },
         ---@type snacks.notifier.Config
         notifier = { enabled = true },
     },
