@@ -1,12 +1,18 @@
-# NeoVim Configuratoin
+# Is-My-Neovim
 
-```bash
+```shell
 - README.md
-- init.lua
+- init.lua             # Entry
 - lua\
   - config\
     - options.lua
-    - lazy.lua
+    - keymaps.lua
+    - lsp.lua          # LSP Client
   - plugins\
+- lsp\                 # LSP Server
     - ...
 ```
+
+## Plugins
+
++ [`lazy.nvim`](https://github.com/folke/lazy.nvim)：插件管理器；未来替换为原生 `vim.pack`
