@@ -60,9 +60,7 @@ local lazy_spec = {
     ---@type snacks.Config
     opts = {
         ---@type snacks.indent.Config
-        indent = {
-            enabled = true,
-        },
+        indent = { enabled = true, },
         ---@type snacks.statuscolumn.Config
         statuscolumn = {
             enabled = true,
@@ -83,6 +81,8 @@ local lazy_spec = {
         explorer = { enabled = true, exclude = {} },
         ---@type snacks.notifier.Config
         notifier = { enabled = true },
+        ---@type snacks.quickfile.Config
+        quickfile = { enabled = true },
     },
     config = function(_, opts)
         Snacks.setup(opts)
