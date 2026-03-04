@@ -21,19 +21,19 @@ vim.opt.scrolloff = 8
 vim.opt.cursorline = true
 -- 列宽标识
 -- vim.opt.colorcolumn = "80"
-vim.api.nvim_create_autocmd("BufEnter", {
-    group = vim.api.nvim_create_augroup("terminal-open", { clear = true }),
-    pattern = "*",
-    callback = function()
-        if vim.bo.buftype == "terminal" then
-            vim.opt_local.number = false
-            vim.opt_local.relativenumber = false
-            vim.opt_local.foldenable = false
-            vim.opt_local.cursorline = false
-            vim.opt_local.colorcolumn = ""
-        end
-    end
-})
+-- vim.api.nvim_create_autocmd("BufEnter", {
+--     group = vim.api.nvim_create_augroup("terminal-open", { clear = true }),
+--     pattern = "*",
+--     callback = function()
+--         if vim.bo.buftype == "terminal" then
+--             vim.opt_local.number = false
+--             vim.opt_local.relativenumber = false
+--             vim.opt_local.foldenable = false
+--             vim.opt_local.cursorline = false
+--             vim.opt_local.colorcolumn = ""
+--         end
+--     end
+-- })
 
 -- 缩进制表
 vim.opt.tabstop = 4

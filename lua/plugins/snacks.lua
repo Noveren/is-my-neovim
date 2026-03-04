@@ -15,6 +15,10 @@ return {
                 git_hl = true,
             }
         },
+        ---@type snacks.terminal.Config
+        terminal = {
+            win = { position = "float" },
+        },
         ---@type snacks.picker.Config
         picker = {
             focus = "input",
@@ -44,6 +48,7 @@ return {
         })
     end,
     keys = {
+        { "<C-T>", function() Snacks.terminal.toggle() end, desc = "Terminal Toggle."},
         { "<C-p>", function() Snacks.picker() end, desc = "Snacks Picker "},
         -- Top Pickers & Explorer
         -- { "<leader>f", function() Snacks.picker.smart() end, desc = "Smart Find Files" },

@@ -15,7 +15,8 @@ vim.keymap.set("n", "<C-h>", "<C-w><C-h>")
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>")
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>")
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>")
-vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode."})
+-- Snacks Terminal: <ESC><ESC> to normal mode
+-- vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode."})
 -- TODO 自动从终端输入模式中切换
 -- TODO 关闭终端窗口，但不退出
 
