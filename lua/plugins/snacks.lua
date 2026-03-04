@@ -4,6 +4,7 @@ return {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
+    ---@type snacks.Config
     opts = {
         bufdelete = {},
         statuscolumn = {
@@ -18,6 +19,7 @@ return {
         picker = {
             focus = "input",
         },
+        ---@type snacks.explorer.Config
         explorer = {
             exclude = {},
         },
@@ -30,13 +32,13 @@ return {
             group = vim.api.nvim_create_augroup("vim-enter-snacks", { clear = true}),
             callback = function ()
                 local no_args = (vim.fn.argc(-1) == 0)
-                -- local is_path = (vim.fn.argc(-1) > 0
-                --     and vim.fn.isdirectory(vim.fn.argv(0) --[[@as string]]) == 1),
+                local is_path = (vim.fn.argc(-1) > 0
+                    and vim.fn.isdirectory(vim.fn.argv(0) --[[@as string]]) == 1)
                 -- local no_bufs = (vim.fn.bufnr() == 0)
                 -- local no_stdin = (vim.fn.line2byte("$") ~= -1)
+                -- Snacks.dashboard.open()
                 if no_args then
-                    -- Snacks.dashboard.open()
-                    Snacks.picker.files({ focus = "input" })
+                    Snacks.explorer.open()
                 end
             end
         })
