@@ -4,9 +4,6 @@ vim.o.timeoutlen = 500
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- 保存当前文件
-vim.keymap.set("n", "<C-s>", ":w<CR>", { remap = false})
-
 -- 调整 Ctrl-v Visual-block
 vim.keymap.set("n", "<A-v>", "<C-v>", { remap = false })
 

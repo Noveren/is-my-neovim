@@ -22,29 +22,29 @@ return {
             exclude = {},
         },
     },
-    config = function(_, opts)
-        Snacks.setup(opts)
-        vim.g.loaded_netrw = 1
-        vim.g.loaded_netrwPlugin = 1
-        vim.api.nvim_create_autocmd("VimEnter", {
-            group = vim.api.nvim_create_augroup("snacks-dashboard", { clear = true}),
-            callback = function ()
-                local conds = {
-                    no_args = (vim.fn.argc(-1) == 0),
-                    -- is_path = (vim.fn.argc(-1) > 0
-                    --     and vim.fn.isdirectory(vim.fn.argv(0) --[[@as string]]) == 1),
-                    -- no_bufs = (vim.fn.bufnr() == 0)
-                    -- no_stdin = (vim.fn.line2byte("$") ~= -1)
-                }
-                for _, v in pairs(conds) do
-                    if v == false then
-                        return
-                    end
-                end
-                Snacks.dashboard.open()
-            end
-        })
-    end,
+    -- config = function(_, opts)
+    --     Snacks.setup(opts)
+    --     vim.g.loaded_netrw = 1
+    --     vim.g.loaded_netrwPlugin = 1
+    --     vim.api.nvim_create_autocmd("VimEnter", {
+    --         group = vim.api.nvim_create_augroup("snacks-dashboard", { clear = true}),
+    --         callback = function ()
+    --             local conds = {
+    --                 no_args = (vim.fn.argc(-1) == 0),
+    --                 -- is_path = (vim.fn.argc(-1) > 0
+    --                 --     and vim.fn.isdirectory(vim.fn.argv(0) --[[@as string]]) == 1),
+    --                 -- no_bufs = (vim.fn.bufnr() == 0)
+    --                 -- no_stdin = (vim.fn.line2byte("$") ~= -1)
+    --             }
+    --             for _, v in pairs(conds) do
+    --                 if v == false then
+    --                     return
+    --                 end
+    --             end
+    --             Snacks.dashboard.open()
+    --         end
+    --     })
+    -- end,
     keys = {
         { "<C-p>", function() Snacks.picker() end, desc = "Snacks Picker "},
         -- Top Pickers & Explorer
