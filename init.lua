@@ -78,11 +78,6 @@ local lazy_config = {
         --         },
         --     },
         -- },
-        -- https://github.com/j-hui/fidget.nvim
-        {
-            "j-hui/fidget.nvim",
-            opts = {},
-        },
         -- https://github.com/nvim-treesitter/nvim-treesitter
         {
             "nvim-treesitter/nvim-treesitter",

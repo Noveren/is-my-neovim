@@ -1,13 +1,67 @@
+
+local function vim_enter_snacks()
+    local no_args = (vim.fn.argc(-1) == 0)
+    -- local is_path = (vim.fn.argc(-1) > 0
+    --     and vim.fn.isdirectory(vim.fn.argv(0) --[[@as string]]) == 1)
+    -- local no_bufs = (vim.fn.bufnr() == 0)
+    -- local no_stdin = (vim.fn.line2byte("$") ~= -1)
+    -- Snacks.dashboard.open()
+    if no_args then
+        Snacks.explorer.open()
+    end
+end
+
+local progress = vim.defaulttable()
+local function advanced_lsp_progress(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
+    if not client or type(value) ~= "table" then
+        return
+    end
+    local p = progress[client.id]
+
+    for i = 1, #p + 1 do
+        if i == #p + 1 or p[i].token == ev.data.params.token then
+            p[i] = {
+                token = ev.data.params.token,
+                msg = ("[%3d%%] %s%s"):format(
+                    value.kind == "end" and 100 or value.percentage or 100,
+                    value.title or "",
+                    value.message and (" **%s**"):format(value.message) or ""
+                ),
+                done = value.kind == "end",
+            }
+            break
+        end
+    end
+
+    local msg = {} ---@type string[]
+    progress[client.id] = vim.tbl_filter(function(v)
+        return table.insert(msg, v.msg) or not v.done
+    end, p)
+
+    local spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+    vim.notify(table.concat(msg, "\n"), "info", {
+        id = "lsp_progress",
+        title = client.name,
+        opts = function(notif)
+            notif.icon = #progress[client.id] == 0 and " "
+            or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
+        end,
+    })
+end
+
 -- https://github.com/folke/snacks.nvim
 ---@type LazySpec
-return {
+local lazy_spec = {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
     ---@type snacks.Config
     opts = {
-        bufdelete = {},
+        bufdelete = { enabled = true },
         statuscolumn = {
+            enabled = true,
             left = { "mark", "git", "fold" },
             right = { "sign" },
             folds = {
@@ -16,35 +70,25 @@ return {
             }
         },
         ---@type snacks.terminal.Config
-        terminal = {
-            win = { position = "float" },
-        },
+        terminal = { win = { position = "float" }, },
         ---@type snacks.picker.Config
-        picker = {
-            focus = "input",
-        },
+        picker = { focus = "input", },
         ---@type snacks.explorer.Config
-        explorer = {
-            exclude = {},
-        },
+        explorer = { enabled = true, exclude = {}, },
+        ---@type snacks.notifier.Config
+        notifier = { enabled = true },
     },
     config = function(_, opts)
         Snacks.setup(opts)
         vim.g.loaded_netrw = 1
         vim.g.loaded_netrwPlugin = 1
         vim.api.nvim_create_autocmd("VimEnter", {
-            group = vim.api.nvim_create_augroup("vim-enter-snacks", { clear = true}),
-            callback = function ()
-                local no_args = (vim.fn.argc(-1) == 0)
-                local is_path = (vim.fn.argc(-1) > 0
-                    and vim.fn.isdirectory(vim.fn.argv(0) --[[@as string]]) == 1)
-                -- local no_bufs = (vim.fn.bufnr() == 0)
-                -- local no_stdin = (vim.fn.line2byte("$") ~= -1)
-                -- Snacks.dashboard.open()
-                if no_args then
-                    Snacks.explorer.open()
-                end
-            end
+            group = vim.api.nvim_create_augroup("vim-enter-snacks", { clear = true }),
+            callback = vim_enter_snacks,
+        })
+        vim.api.nvim_create_autocmd("LspProgress", {
+            group = vim.api.nvim_create_augroup("advanced-lsp-progress", { clear = true }),
+            callback = advanced_lsp_progress,
         })
     end,
     keys = {
@@ -55,7 +99,7 @@ return {
         -- { "<leader>,", function() Snacks.picker.buffers({ focus = "list" }) end, desc = "Buffers" },
         -- { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
         -- { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
-        -- { "<leader>n", function() Snacks.picker.notifications({ focus = "list" }) end, desc = "Notification History" },
+        { "<leader>n", function() Snacks.picker.notifications({ focus = "list" }) end, desc = "Notification History" },
         { "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
         -- Find
         { "<leader>fb", function() Snacks.picker.buffers({ focus = "list" }) end, desc = "Buffers" },
@@ -117,3 +161,6 @@ return {
      },
 }
 
+
+
+return lazy_spec
