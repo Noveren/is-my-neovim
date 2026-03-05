@@ -1,4 +1,6 @@
 ---@type string[]
+local runtime = {}
+---@type string[]
 local library = {}
 
 -- TODO 动态加载
@@ -6,6 +8,9 @@ local path_config = vim.fn.expand(vim.fn.stdpath("config"))
 local path_startup_cwd = vim.fn.expand(vim.fn.getcwd())
 if vim.fs.relpath(path_config, path_startup_cwd) ~= nil then
     vim.notify("Set lua-language-server for neovim configuration.")
+
+    runtime["version"] = "LuaJIT"
+
     table.insert(library, vim.fn.expand("$VIMRUNTIME/lua"))
     table.insert(library, vim.fn.expand("${3rd}/luv/library"))
 
@@ -38,13 +43,11 @@ return {
         Lua = {
             codeLens = { enable = true },
             hint = { enable = true, semicolon = "Disable" },
+            runtime = runtime,
             workspace = {
                 checkThirdParty = false,
                 library = library,
             }
-            -- runtime = {
-            --     version = "LuaJIT",
-            -- },
             -- workspace = {
             --     checkThirdParty = false,
             --     library = library,

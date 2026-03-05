@@ -1,8 +1,9 @@
-vim.lsp.enable "lua_ls" -- lua
-vim.lsp.enable "clangd" -- c/c++
-vim.lsp.enable "zls"    -- zig
-vim.lsp.enable "tombi"  -- toml
-vim.lsp.enable "ty"     -- python
+vim.lsp.enable "lua_ls"           -- lua
+vim.lsp.enable "clangd"           -- c/c++
+vim.lsp.enable "zls"              -- zig
+vim.lsp.enable "rust_analyzer"    -- rust
+vim.lsp.enable "tombi"            -- toml
+vim.lsp.enable "ty"               -- python
 -- TODO tinymist
 -- TODO just-lsp https://github.com/terror/just-lsp
 -- TODO asm-lsp https://github.com/bergercookie/asm-lsp
