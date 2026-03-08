@@ -111,6 +111,7 @@ local lazy_spec = {
         { "<leader>fb", function() Snacks.picker.buffers({ focus = "list" }) end, desc = "Buffers" },
         { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
         { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
+        { "<leader>fs", function() Snacks.picker.treesitter() end, desc = "Find Symbols" },
         -- { "<leader>fg", function() Snacks.picker.git_files({ focus = "list" }) end, desc = "Find Git Files" },
         -- { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
         -- { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
