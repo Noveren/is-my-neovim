@@ -4,6 +4,7 @@ vim.lsp.enable "zls"              -- zig
 vim.lsp.enable "rust_analyzer"    -- rust
 vim.lsp.enable "tombi"            -- toml
 vim.lsp.enable "ty"               -- python
+vim.lsp.enable "bashls"           -- bash
 -- TODO tinymist
 -- TODO just-lsp https://github.com/terror/just-lsp
 -- TODO asm-lsp https://github.com/bergercookie/asm-lsp
@@ -63,7 +64,7 @@ end, {
 
 local function lsp_attach(_)
     vim.diagnostic.config({
-        virtual_text = false,
+        virtual_text = true,
         virtual_lines = false,
         signs = true,
         -- FIXME 波浪线无法显示
