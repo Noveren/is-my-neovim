@@ -128,13 +128,39 @@ local function plugin_blink_cmp(cond)
     }
 end
 
+local function plugin_nvim_notify(cond)
+  -- https://github.com/rcarriga/nvim-notify
+  -- Required vim.opt.termguicolors = true
+  return {
+    "rcarriga/nvim-notify",
+    cond = cond,
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {
+      max_width = 36,
+      stages = "no_animation",
+      timeout = 5000,
+      render = "wrapped-compact",
+    },
+    init = function()
+      vim.notify = require("notify")
+      vim.api.nvim_create_user_command("Messages", "Telescope notify", { desc = "Telescope notify" })
+      -- vim.api.nvim_create_autocmd("LspProgress", {
+      --   group = vim.api.nvim_create_augroup("advanced-lsp-progress", { clear = true }),
+      --   callback = advanced_lsp_progress,
+      -- })
+    end
+  }
+end
+
 local function plugin_nvim_telescope(cond)
+  -- https://github.com/nvim-telescope/telescope.nvim
   return {
     "nvim-telescope/telescope.nvim",
     cond = cond,
     -- TODO nvim-telescope/telescope-lsp.nvim
     -- TODO outline
     -- TODO fzf-navtive
+    -- TODO notify
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       defaults = {
@@ -178,11 +204,11 @@ lazy.setup({
   git = { url_format = github_mirror .. "https://github.com/%s.git" },
   install = { missing = true, colorscheme = { "onedark" } },
   spec = {
-    -- vim.tbl_extend(),
     plugin_onedark(true),
     plugin_nvim_autopairs(true),
     plugin_nvim_treesitter(true),
     plugin_blink_cmp(true),
+    plugin_nvim_notify(not nvim_minimal),
     plugin_nvim_telescope(not nvim_minimal),
   }
 })
