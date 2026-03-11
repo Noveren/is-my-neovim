@@ -11,7 +11,7 @@ local function lua()
   local path_config = vim.fn.expand(vim.fn.stdpath("config"))
   local path_startup_cwd = vim.fn.expand(vim.fn.getcwd())
   if vim.fs.relpath(path_config, path_startup_cwd) ~= nil then
-    vim.notify("Set lua-language-server for neovim configuration.")
+    -- vim.notify("Set lua-language-server for neovim configuration.")
     runtime["version"] = "LuaJIT"
     table.insert(library, vim.fn.expand("$VIMRUNTIME/lua"))
     table.insert(library, vim.fn.expand("${3rd}/luv/library"))
@@ -245,6 +245,46 @@ local function rust()
   }
 end
 
+vim.api.nvim_create_user_command(
+  "LspRestart",
+  function(info)
+    local client_names = info.args
+    -- Default to restarting all active servers
+    if #client_names == 0 then
+      ---@diagnostic disable-next-line: cast-local-type
+      client_names = vim
+        .iter(vim.lsp.get_clients())
+        :map(function(client)
+          return client.name
+        end)
+        :totable()
+    end
+
+    for name in vim.iter(client_names) do
+      if vim.lsp.config[name] == nil then
+        vim.notify(("Invalid server name '%s'"):format(name))
+      else
+        vim.lsp.enable(name, false)
+        if info.bang then
+          vim.iter(vim.lsp.get_clients({ name = name })):each(function(client)
+            client:stop(true)
+          end)
+        end
+      end
+    end
+
+    local timer = assert(vim.uv.new_timer())
+    timer:start(500, 0, function()
+      for name in vim.iter(client_names) do
+        vim.schedule_wrap(vim.lsp.enable)(name)
+      end
+    end)
+  end, {
+    desc = 'Restart the given client (just for 0.11.6)',
+    nargs = '?',
+    bang = true,
+  })
+
 local function lsp()
   -- https://neovim.io/doc/user/lsp
   -- 默认全局按键映射
@@ -289,3 +329,4 @@ local function lsp()
   lsp_enable("zls", zig())
   lsp_enable("rust_analyzer", rust())
 end lsp()
+

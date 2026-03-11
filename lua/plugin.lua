@@ -24,6 +24,7 @@ local function require_lazy()
 end
 
 ---@param cond boolean
+-- TODO @param priority? number
 ---@return table
 local function plugin_onedark(cond)
     -- https://github.com/navarasu/onedark.nvim
@@ -44,6 +45,7 @@ local function plugin_nvim_autopairs(cond)
   return {
     "windwp/nvim-autopairs",
     cond = cond,
+    lazy = true,
     event = "InsertEnter",
     opts = {}
   }
@@ -59,6 +61,7 @@ local function plugin_nvim_treesitter(cond)
       "nvim-treesitter/nvim-treesitter",
       cond = cond,
       lazy = false,
+      priority = 900,
       build = ":TSUpdate",
       init = function()
         local languages = {
@@ -85,70 +88,151 @@ end
 ---@param cond boolean
 ---@return table
 local function plugin_blink_cmp(cond)
-    -- https://github.com/Saghen/blink.cmp
-    -- https://cmp.saghen.dev/
-    return {
-      "saghen/blink.cmp",
-      cond = cond,
-      -- lazy = true,
-      version = "1.*",
+  -- https://github.com/Saghen/blink.cmp
+  -- https://cmp.saghen.dev/
+  return {
+    "saghen/blink.cmp",
+    cond = cond,
+    lazy = true,
+    event = "UIEnter",
+    version = "1.*",
 
-      opts = {
+    opts = {
+      keymap = { preset = "super-tab" },
+      fuzzy = { implementation = "prefer_rust_with_warning" },
+      signature = { enabled = true, window = { show_documentation = true } },
+      completion = {
+        menu = {
+          auto_show = true,
+        },
+        documentation = {
+          auto_show = true,
+        },
+      },
+      sources = {
+        default = { 'lsp', 'path', 'buffer' },
+      },
+      cmdline = {
+        enabled = true,
         keymap = { preset = "super-tab" },
-        fuzzy = { implementation = "prefer_rust_with_warning" },
-        signature = { enabled = true, window = { show_documentation = true } },
-        completion = {
-          menu = {
-            auto_show = true,
-          },
-          documentation = {
-            auto_show = true,
-          },
-        },
-        sources = {
-          -- lsp, path, snippets, buffer
-          default = { 'lsp', 'path', 'buffer' },
-        },
-        cmdline = {
-          enabled = true,
-          keymap = { preset = "super-tab" },
-          completion = { menu = { auto_show = true } },
-          sources = function()
-            local cmd_type = vim.fn.getcmdtype()
-            if cmd_type == "/" or cmd_type == "?" then
-              return { "buffer" }
-            end
-            if cmd_type == ":" then
-              return { "cmdline" }
-            end
-            return {}
-          end,
-          },
-        },
-    }
+        completion = { menu = { auto_show = true } },
+        sources = function()
+          local cmd_type = vim.fn.getcmdtype()
+          if cmd_type == "/" or cmd_type == "?" then
+            return { "buffer" }
+          end
+          if cmd_type == ":" then
+            return { "cmdline" }
+          end
+          return {}
+        end,
+      },
+    },
+  }
 end
 
-local function plugin_nvim_notify(cond)
-  -- https://github.com/rcarriga/nvim-notify
-  -- Required vim.opt.termguicolors = true
+---@param cond boolean
+local function plugin_indent_blankline(cond)
+  -- https://github.com/lukas-reineke/indent-blankline.nvim
   return {
-    "rcarriga/nvim-notify",
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     cond = cond,
-    dependencies = { "nvim-lua/plenary.nvim" },
-    opts = {
-      max_width = 36,
-      stages = "no_animation",
-      timeout = 5000,
-      render = "wrapped-compact",
+    lazy = false,
+    opts = {}
+  }
+end
+
+---@param cond boolean
+local function plugin_outline(cond)
+  -- https://github.com/hedyhli/outline.nvim
+  return {
+    "hedyhli/outline.nvim",
+    cond = cond,
+    lazy = true,
+    cmd = { "Outline", "OutlineOpen" },
+    keys = {
+      { "go", "<cmd>Outline<CR>", desc = "Toggle outline" },
     },
-    init = function()
-      vim.notify = require("notify")
-      vim.api.nvim_create_user_command("Messages", "Telescope notify", { desc = "Telescope notify" })
-      -- vim.api.nvim_create_autocmd("LspProgress", {
-      --   group = vim.api.nvim_create_augroup("advanced-lsp-progress", { clear = true }),
-      --   callback = advanced_lsp_progress,
-      -- })
-    end
+    opts = {
+      outline_window = {
+        position = "right",
+        auto_width = { enabled = false, max_width = 40 },
+        wrap = false,
+      },
+      outline_items = {
+        show_symbol_details = false,
+      },
+      preview_window = { live = true, },
+      -- symbols = {
+      --   icon_fetcher = function() return "" end,
+      -- }
+      -- TODO 统一按键
+      -- keymaps = {
+      -- }
+      -- providers = {}
+    }
+  }
+end
+
+---@param cond boolean
+local function plugin_lualine(cond)
+  -- https://github.com/nvim-lualine/lualine.nvim
+  return {
+    "nvim-lualine/lualine.nvim",
+    cond = cond,
+    lazy = false,
+    opts = {
+      options = {
+        theme = "auto",
+        component_separators = { left = '', right = '' },
+        section_separators = { left = '', right = ''},
+        globalstatus = true,
+      },
+      sections = {
+        lualine_a = { "mode" },
+        lualine_b = {
+          {
+            "diagnostics",
+            sources = { "nvim_workspace_diagnostic" },
+            sections = { "error", "warn" },
+            update_in_insert = true,
+            always_visible = true,
+          }
+        },
+        lualine_c = { "branch", "filename" },
+        lualine_x = { "progress", { "location", fmt = function(s) return s:match(":(.*)") end }, },
+        lualine_y = { "encoding", "filetype" },
+        lualine_z = { "lsp_status" },
+      },
+    },
+  }
+end
+
+
+---@param cond boolean
+local function plugin_gitsigns(cond)
+  -- https://github.com/lewis6991/gitsigns.nvim
+  return {
+    "lewis6991/gitsigns.nvim",
+    cond = cond,
+    lazy = true,
+    event = "UIEnter",
+    opts = {
+      signcolumn = false,
+      numhl = true,
+      current_line_blame = false,
+    }
+  }
+end
+
+---@param cond boolean
+local function plugin_fidget(cond)
+  -- https://github.com/j-hui/fidget.nvim
+  return {
+    "j-hui/fidget.nvim",
+    cond = cond,
+    opts = { notification = { override_vim_notify = true } },
   }
 end
 
@@ -157,44 +241,70 @@ local function plugin_nvim_telescope(cond)
   return {
     "nvim-telescope/telescope.nvim",
     cond = cond,
+    lazy = true,
+    event = "UIEnter",
     -- TODO nvim-telescope/telescope-lsp.nvim
-    -- TODO outline
     -- TODO fzf-navtive
-    -- TODO notify
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "j-hui/fidget.nvim",
+    },
     opts = {
       defaults = {
         -- initial_mode = "normal", -- (*insert, normal)
       },
-      pickers = { },
+      pickers = {},
     },
-    init = function()
+    config = function()
+      local telescope = require("telescope")
+      telescope.load_extension("fidget")
+      vim.keymap.set('n', '<leader>fn', function() telescope.extensions.fidget.fidget({
+        -- FIXME 通知预览无法自动换行
+        wrap_text = true,
+        initial_mode = "normal",
+      }) end,{ desc = 'Telescope notifications' })
+
       local builtin = require("telescope.builtin")
-      vim.keymap.set('n', '<C-P>', builtin.builtin, { desc = "Telescope builtin pickers" })
+      vim.keymap.set('n', '<C-P>', function() builtin.builtin({
+        preview = false,
+      }) end, { desc = "Telescope builtin pickers" })
       vim.keymap.set('n', '<leader>ff', function() builtin.find_files({
       }) end, { desc = 'Telescope find files' })
       vim.keymap.set('n', '<leader>fc', function() builtin.find_files({
         cwd = vim.fn.stdpath("config"),
       }) end, { desc = 'Telescope find files' })
       vim.keymap.set('n', '<leader>fg', function() builtin.live_grep({
+        path_display = { "tail" },
       }) end, { desc = 'Telescope live grep' })
       vim.keymap.set('n', '<leader>fb', function() builtin.buffers({
         initial_mode = "normal",
+        preview = false,
         select_current = true,
         -- FIXME path_display 不生效
       }) end, { desc = 'Telescope buffers' })
       vim.keymap.set('n', '<leader>fs', function() builtin.treesitter({
         ignore_symbols = { "associated", "parameter", },
       }) end,{ desc = 'Telescope treesitter' })
-      vim.keymap.set('n', '<leader>ss', function() builtin.lsp_document_symbols({
-        ignore_symbols = { },
-      }) end, { desc = 'Telescope lsp document symbols' })
-      vim.keymap.set('n', 'gd', function() builtin.lsp_definitions(
+      vim.keymap.set('n', '<leader>fd', function() builtin.diagnostics({
+        initial_mode = "normal",
+      }) end,{ desc = 'Telescope diagnostics' })
+
+      -- LSP
+      vim.keymap.set('n', 'gri', function() builtin.lsp_implementations(
         require("telescope.themes").get_cursor({ initial_mode = "normal", path_display = { "tail" } })
-      ) end, { desc = 'Telescope lsp definitions' })
+      ) end, { desc = 'Goto implementations' })
       vim.keymap.set('n', 'grr', function() builtin.lsp_references(
         require("telescope.themes").get_cursor({ initial_mode = "normal", path_display = { "tail" } })
-      ) end, { desc = 'Telescope lsp references' })
+      ) end, { desc = 'Goto references' })
+      vim.keymap.set('n', 'grt', function() builtin.lsp_type_definitions(
+        require("telescope.themes").get_cursor({ initial_mode = "normal", path_display = { "tail" } })
+      ) end, { desc = 'Goto type definitions' })
+      vim.keymap.set('n', 'gO', function() builtin.lsp_document_symbols({
+        ignore_symbols = { },
+      }) end, { desc = 'Goto document symbols' })
+      vim.keymap.set('n', 'gd', function() builtin.lsp_definitions(
+        require("telescope.themes").get_cursor({ initial_mode = "normal", path_display = { "tail" } })
+      ) end, { desc = 'Goto definitions' })
     end
   }
 end
@@ -202,13 +312,17 @@ end
 local lazy = require_lazy()
 lazy.setup({
   git = { url_format = github_mirror .. "https://github.com/%s.git" },
-  install = { missing = true, colorscheme = { "onedark" } },
+  install = { missing = false, colorscheme = { "onedark" } },
   spec = {
     plugin_onedark(true),
     plugin_nvim_autopairs(true),
     plugin_nvim_treesitter(true),
     plugin_blink_cmp(true),
-    plugin_nvim_notify(not nvim_minimal),
+    plugin_indent_blankline(not nvim_minimal),
+    plugin_outline(not nvim_minimal),
+    plugin_lualine(not nvim_minimal),
+    plugin_gitsigns(not nvim_minimal),
+    plugin_fidget(not nvim_minimal),
     plugin_nvim_telescope(not nvim_minimal),
   }
 })

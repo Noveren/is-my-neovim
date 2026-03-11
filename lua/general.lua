@@ -12,7 +12,7 @@ local function options()
   vim.opt.relativenumber = true
   vim.opt.scrolloff = 8
   vim.opt.cursorline = true
-  vim.opt.signcolumn = "yes:1"
+  vim.opt.signcolumn = "auto"
 
   -- 缩进
   vim.opt.tabstop = 2
@@ -44,6 +44,9 @@ end options()
 -- n: % 匹配括号跳转
 -- n: gh, gd, <C-k> <C-i> LSP 跳转
 -- n: gra LSP Code Action
+-- n: f <char> 当前行字符跳转
+-- n /<word> ?<word> 全文搜索跳转（前后）使用 n 切换
+-- :<range>s/<pattern>/<template>/g
 local function keymaps()
   -- 使用 `:verbose map [<key>]` 查看按键映射
 
