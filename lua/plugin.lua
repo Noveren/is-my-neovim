@@ -309,6 +309,16 @@ local function plugin_nvim_telescope(cond)
   }
 end
 
+local function plugin_vim_floaterm(cond)
+  -- https://github.com/voldikss/vim-floaterm
+  return {
+    "voldikss/vim-floaterm",
+    cond = cond,
+    lazy = true,
+    event = "UIEnter",
+  }
+end
+
 local lazy = require_lazy()
 lazy.setup({
   git = { url_format = github_mirror .. "https://github.com/%s.git" },
@@ -324,5 +334,6 @@ lazy.setup({
     plugin_gitsigns(not nvim_minimal),
     plugin_fidget(not nvim_minimal),
     plugin_nvim_telescope(not nvim_minimal),
+    -- plugin_vim_floaterm(not nvim_minimal),
   }
 })

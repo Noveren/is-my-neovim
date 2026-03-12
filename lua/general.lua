@@ -29,8 +29,7 @@ local function options()
   -- Shell
   local sysname = vim.uv.os_uname().sysname
   if sysname == "Windows_NT" then
-    vim.o.shellslash = true
-    vim.opt.shellslash = true
+    -- vim.opt.shellslash = true
     local env_shell = os.getenv("SHELL")
     -- Windows Git Bash
     if env_shell and env_shell:find("bash") then
