@@ -12,7 +12,7 @@ local function options()
   vim.opt.relativenumber = true
   vim.opt.scrolloff = 8
   vim.opt.cursorline = true
-  vim.opt.signcolumn = "auto"
+  vim.opt.signcolumn = "yes:1"
 
   -- 缩进
   vim.opt.tabstop = 2
@@ -53,6 +53,8 @@ local function keymaps()
   vim.opt.timeoutlen = 500
   vim.g.mapleader = " "
   vim.g.maplocalleader = " "
+
+  vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Save" })
 
   -- 窗口焦点切换
   vim.keymap.set("n", "<C-h>", "<C-w><C-h>")
