@@ -94,11 +94,41 @@ local function bash()
 end
 
 local function zig()
+  ---@type vim.lsp.Config
   return {
     cmd = { 'zls' },
     filetypes = { 'zig', },
     root_markers = { 'build.zig', '.git' },
-    workspace_required = false,
+    settings = {
+      -- 亦可通过 zls.json 进行配置，搜索路径见 `zls env`
+      -- https://zigtools.org/zls/configure/zls-json/
+      -- https://raw.githubusercontent.com/zigtools/zls/refs/heads/master/schema.json
+      zls = {
+        enable_argument_placeholders = false,
+        -- 若 `build.zig` 中有 `Step check`，则自动启用
+        enable_build_on_save = nil,
+        build_on_save_args = {},
+      }
+    },
+    on_init = function()
+      local group = vim.api.nvim_create_augroup("zig-auto", { clear = true })
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = { "*.zig" },
+        group = group,
+        callback = function(ev)
+          vim.lsp.buf.format({ bufnr = ev.buf })
+        end
+      })
+      -- vim.api.nvim_create_autocmd("BufWritePre", {
+      --   pattern = { "*.zig", "*.zon" },
+      --   callback = function()
+      --     vim.lsp.buf.cod_action({
+      --       context = { only = { "source.organizeImports" } },
+      --       apply = true,
+      --     })
+      --   end
+      -- })
+    end
   }
 end
 
