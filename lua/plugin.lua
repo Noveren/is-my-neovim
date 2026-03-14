@@ -106,7 +106,7 @@ local function plugin_blink_cmp(cond)
           auto_show = true,
         },
         documentation = {
-          auto_show = true,
+          auto_show = false,
         },
       },
       sources = {

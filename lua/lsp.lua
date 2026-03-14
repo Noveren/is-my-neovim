@@ -62,14 +62,31 @@ end
 
 local function c()
   return {
-    cmd = { "clangd" },
+    cmd = {
+      "clangd",
+      "--clang-tidy",
+      "--completion-style=bundled",
+      "--function-arg-placeholders=0",
+      "--header-insertion=iwyu",
+      "--enable-config",
+    },
     filetypes = { "c", "cpp" },
     root_markers = {
       ".clangd",
-      ".clang-tidy",
-      ".clang-format",
+      "CMakeLists.txt",
+      "build.zig",
       ".git",
     },
+    on_init = function()
+      local group = vim.api.nvim_create_augroup("c-auto", { clear = true })
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = { "*.c", "*.cc", ".h", ".hh" },
+        group = group,
+        callback = function(ev)
+          vim.lsp.buf.format({ bufnr = ev.buf })
+        end
+      })
+    end,
   }
 end
 
@@ -142,7 +159,7 @@ local function rust()
         if err then
           error(tostring(err))
         end
-        vim.notify 'Cargo workspace reloaded'
+vim.notify 'Cargo workspace reloaded'
       end, 0)
     end
   end
