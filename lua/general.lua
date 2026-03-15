@@ -46,11 +46,12 @@ end options()
 -- n: f <char> 当前行字符跳转
 -- n /<word> ?<word> 全文搜索跳转（前后）使用 n 切换
 -- :<range>s/<pattern>/<template>/g
-local function keymaps()
   -- 使用 `:verbose map [<key>]` 查看按键映射
+local function keymaps()
 
   -- <leader>
   vim.opt.timeoutlen = 500
+  vim.opt.ttimeoutlen = 500
   vim.g.mapleader = " "
   vim.g.maplocalleader = " "
 
@@ -74,4 +75,47 @@ local function keymaps()
 
   vim.keymap.set("n", "<CR>", "i<CR><Esc>")           -- 空白插入
   vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>") -- 取消高亮
+
+  -- TODO
+  -- vim.keymap.set("t", "<Esc><Esc>", function()
+  -- end, { noremap = true })
+  --   vim.cmd("stopinsert")
+  --
+
+  ---@type integer | nil
+  vim.g.my_switch_terminal_last_buf = nil
+
+  vim.keymap.set("n", "<C-t>", function()
+    local cur_buf = vim.api.nvim_get_current_buf()
+    local cur_win = vim.api.nvim_get_current_win()
+    local cur_buftype = vim.api.nvim_get_option_value("buftype", { buf = cur_buf })
+    if cur_buftype == "" then
+      local terminal_buf = nil
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        local flag = vim.api.nvim_buf_is_valid(buf)
+        flag = flag and vim.api.nvim_buf_is_loaded(buf)
+        flag = flag and vim.api.nvim_get_option_value("buftype", { buf = buf }) == "terminal"
+        if flag then
+            terminal_buf = buf
+            break
+        end
+      end
+      vim.g.my_switch_terminal_last_buf = cur_buf
+      if terminal_buf ~= nil then
+        vim.api.nvim_win_set_buf(cur_win, terminal_buf)
+      else
+        vim.cmd[[terminal]]
+      end
+      return
+    end
+    if cur_buftype == "terminal" then
+      if vim.g.my_switch_terminal_last_buf ~= nil then
+        local flag = vim.api.nvim_buf_is_valid(vim.g.my_switch_terminal_last_buf)
+        if flag then
+          vim.api.nvim_win_set_buf(cur_win, vim.g.my_switch_terminal_last_buf)
+        end
+      end
+      return
+    end
+  end, { desc = "Terminal" })
 end keymaps()
