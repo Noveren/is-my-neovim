@@ -201,7 +201,7 @@ local function plugin_lualine(cond)
           }
         },
         lualine_c = { "branch", "filename" },
-        lualine_x = { "progress", { "location", fmt = function(s) return s:match(":(.*)") end }, },
+        lualine_x = { "diff", "progress", { "location", fmt = function(s) return s:match(":(.*)") end }, },
         lualine_y = { "encoding", "filetype" },
         lualine_z = { "lsp_status" },
       },

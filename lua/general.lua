@@ -51,7 +51,7 @@ local function keymaps()
 
   -- <leader>
   vim.opt.timeoutlen = 500
-  vim.opt.ttimeoutlen = 500
+  -- vim.opt.ttimeoutlen = 500
   vim.g.mapleader = " "
   vim.g.maplocalleader = " "
 
