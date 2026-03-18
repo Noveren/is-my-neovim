@@ -159,7 +159,7 @@ local function rust()
         if err then
           error(tostring(err))
         end
-vim.notify 'Cargo workspace reloaded'
+        vim.notify 'Cargo workspace reloaded'
       end, 0)
     end
   end
