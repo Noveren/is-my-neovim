@@ -83,13 +83,17 @@ local function keymaps()
   --
 
   vim.keymap.set("n", "<leader>rr", function()
-    local fname = vim.api.nvim_buf_get_name(0)
-    if fname:match("%.py$") then
+    local fpath = vim.fs.relpath(vim.fn.getcwd(), vim.api.nvim_buf_get_name(0))
+    if fpath == nil then
+      vim.notify("The current directory is not an ancestor of the scirpt file.")
+      return
+    end
+    if fpath:match("%.py$") then
       vim.cmd("write")
       if vim.fn.executable("uv") == 1 then
-        vim.cmd("!uv run %")
+        vim.cmd("!uv run " .. fpath)
       elseif vim.fn.executable("python") == 1 then
-        vim.cmd("!python %")
+        vim.cmd("!python " .. fpath)
       else
         vim.notify("No available interpreter for python.")
       end
