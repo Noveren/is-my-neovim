@@ -249,14 +249,18 @@ local function plugin_nvim_telescope(cond)
       "nvim-lua/plenary.nvim",
       "j-hui/fidget.nvim",
     },
-    opts = {
-      defaults = {
-        -- initial_mode = "normal", -- (*insert, normal)
-      },
-      pickers = {},
-    },
+    opts = {},
     config = function()
       local telescope = require("telescope")
+      telescope.setup({
+        defaults = {
+          -- initial_mode = "normal", -- (*insert, normal)
+          mappings = {
+            n = { ["q"] = require("telescope.actions").close },
+          },
+          pickers = {},
+        }
+      })
       telescope.load_extension("fidget")
       vim.keymap.set('n', '<leader>fn', function() telescope.extensions.fidget.fidget({
         -- FIXME 通知预览无法自动换行
