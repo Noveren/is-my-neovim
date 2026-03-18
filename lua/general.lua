@@ -55,7 +55,7 @@ local function keymaps()
   vim.g.mapleader = " "
   vim.g.maplocalleader = " "
 
-  vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Save" })
+  -- vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Save" })
 
   -- 窗口焦点切换
   vim.keymap.set("n", "<C-h>", "<C-w><C-h>")
@@ -81,6 +81,22 @@ local function keymaps()
   -- end, { noremap = true })
   --   vim.cmd("stopinsert")
   --
+
+  vim.keymap.set("n", "<leader>rr", function()
+    local fname = vim.api.nvim_buf_get_name(0)
+    if fname:match("%.py$") then
+      vim.cmd("write")
+      if vim.fn.executable("uv") == 1 then
+        vim.cmd("!uv run %")
+      elseif vim.fn.executable("python") == 1 then
+        vim.cmd("!python %")
+      else
+        vim.notify("No available interpreter for python.")
+      end
+    else
+      vim.notify("Invalid file type.")
+    end
+  end, { desc = "Run script." })
 
   ---@type integer | nil
   vim.g.my_switch_terminal_last_buf = nil
